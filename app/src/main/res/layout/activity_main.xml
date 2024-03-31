@@ -8,14 +8,14 @@
     tools:context=".MainActivity" >
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/temp_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="cap" />
+        android:text="로그인화면" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/temp_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="iiii" />
+        android:text="회원가입화면" />
 </LinearLayout>
