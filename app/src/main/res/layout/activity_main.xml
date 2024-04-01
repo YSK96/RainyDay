@@ -11,26 +11,13 @@
         android:id="@+id/temp_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
         android:text="로그인화면" />
-=======
-        android:text="gunwoo" />
->>>>>>> 136a766aa3b9d9b002d86098b5d1c7c21ace1e15
 
     <Button
         android:id="@+id/temp_register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
         android:text="회원가입화면" />
-=======
-        android:text="Button" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
 
->>>>>>> 136a766aa3b9d9b002d86098b5d1c7c21ace1e15
 </LinearLayout>
