@@ -28,6 +28,12 @@
             android:name=".RouteDepartActivity"
             android:exported="false" />
         <activity
+            android:name=".ScheduleAddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RouteActivity"
+            android:exported="false" />
+        <activity
             android:name=".RouteDestActivity"
             android:exported="false" />
         <activity
@@ -39,9 +45,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBI_xKrXy81n7ELWopYZi15QMKJ0rQrL6Q"/>
+            android:value="AIzaSyBI_xKrXy81n7ELWopYZi15QMKJ0rQrL6Q" />
     </application>
 
 </manifest>

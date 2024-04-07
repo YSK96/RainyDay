@@ -3,7 +3,6 @@ package cap.project.rainyday;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Application;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -86,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Gson gson = new Gson();
                             String json = gson.toJson(user);
 
-                            String url = "http://ec2-18-205-25-154.compute-1.amazonaws.com/user/create";
+                            String url = "http://ec2-34-229-85-193.compute-1.amazonaws.com/user/create";
 
                             URL obj = new URL(url);
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -110,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     public void run() {
                                         showToast("회원 가입에 성공했습니다.");
                                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(intent);
                                         finish();
 
@@ -143,12 +141,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         // 이미 회원이시라구요? --> 로그인 화면으로
-        Button button_login = findViewById(R.id.button_goto_login);
+        Button button_login = findViewById(R.id.button_login);
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             }

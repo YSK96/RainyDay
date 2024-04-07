@@ -25,5 +25,11 @@
         android:layout_height="wrap_content"
         android:text="일정등록화면" />
 
+    <Button
+        android:id="@+id/temp_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="메인페이지 화면" />
+
 
 </LinearLayout>
