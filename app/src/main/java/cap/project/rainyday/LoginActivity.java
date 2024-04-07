@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 new Thread(new Runnable() {
                     @Override
-                    public void run() {ㅈㅇ
+                    public void run() {
                         // JSON 형식으로 데이터 생성
                         User user = new User(id, password);
                         Gson gson = new Gson();
@@ -147,7 +147,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }

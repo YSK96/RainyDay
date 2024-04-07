@@ -2,7 +2,6 @@ package cap.project.rainyday;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -34,5 +33,17 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        Button enroll = findViewById(R.id.temp_enroll);
+        enroll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RouteDepartActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
     }
 }

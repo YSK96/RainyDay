@@ -110,6 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     public void run() {
                                         showToast("회원 가입에 성공했습니다.");
                                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                         startActivity(intent);
                                         finish();
 
@@ -147,6 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 finish();
             }

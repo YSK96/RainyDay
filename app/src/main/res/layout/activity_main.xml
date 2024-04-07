@@ -19,5 +19,11 @@
         android:layout_height="wrap_content"
         android:text="회원가입화면" />
 
+    <Button
+        android:id="@+id/temp_enroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="일정등록화면" />
+
 
 </LinearLayout>
