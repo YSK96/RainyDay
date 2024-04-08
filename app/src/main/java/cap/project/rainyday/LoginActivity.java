@@ -16,7 +16,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -82,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         // HTTP 요청 보내기
                         try {
-                            String url = "http://ec2-18-205-25-154.compute-1.amazonaws.com/user/login";
+                            String url = "http://ec2-34-229-85-193.compute-1.amazonaws.com/user/login";
 
                             URL obj = new URL(url);
                             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -101,11 +104,18 @@ public class LoginActivity extends AppCompatActivity {
                             // 응답 받기
                             int responseCode = con.getResponseCode();
                             if (responseCode == HttpURLConnection.HTTP_OK) {
+                                InputStream inputStream = con.getInputStream();
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                                // 응답 Body에서 long 값 읽기
+                                String responseBody = reader.readLine();
+                                long responseLong = Long.parseLong(responseBody);
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         showToast("로그인에 성공했습니다.");
                                         Intent intent = new Intent(LoginActivity.this, MainPageActivity.class);
+                                        intent.putExtra("userId", responseLong);
                                         startActivity(intent);
                                         finish();
                                     }

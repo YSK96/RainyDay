@@ -10,18 +10,22 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:background="@drawable/custom_border"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/addScheduleButton"
-            android:layout_width="wrap_content"
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="일정 추가"
-            android:textColor="@color/white"
-            app:backgroundTint="#4469D7" />
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        </com.google.android.material.appbar.AppBarLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -33,18 +37,12 @@
         <ListView
             android:id="@+id/sch_list"
             android:layout_width="match_parent"
-            android:layout_height="573dp"
+            android:layout_height="match_parent"
             android:background="@drawable/custom_border"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/custom_border"
-        android:orientation="vertical"></LinearLayout>
 
 
     <!-- The navigation drawer -->
