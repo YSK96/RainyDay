@@ -80,9 +80,8 @@ public class RegisterActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             // JSON 형식으로 데이터 생성
-                            User user = new User(id, password, name);
-                            Gson gson = new Gson();
-                            String json = gson.toJson(user);
+                            String json = String.format("{\"id\": \"%s\", \"password\": \"%s\", \"name\": \"%s\"}", id, password, name);
+
 
                             String url = "http://ec2-34-229-85-193.compute-1.amazonaws.com/user/create";
 
