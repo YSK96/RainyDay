@@ -14,6 +14,17 @@ public class Schedule {
         this.title =title;
     }
 
+    public Schedule() {
+    }
+
+    public void setScheduleId(long scheduleId) {
+        this.scheduleId = scheduleId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public long getScheduleId() {
         return scheduleId;
     }

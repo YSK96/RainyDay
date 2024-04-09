@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             // HTTP 요청 설정
                             con.setRequestMethod("POST");
-                            con.setRequestProperty("Content-Type", "application/json");
+                            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                             con.setDoOutput(true);
 
                             // JSON 데이터 전송

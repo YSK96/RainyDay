@@ -87,6 +87,9 @@ public class MainPageActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainPageActivity.this, RouteActivity.class);
+                long scheduleId = scheduleListFromBackend.get(position).getScheduleId();
+                Log.d("gogo" , String.valueOf(scheduleId));
+                intent.putExtra("scheduleId", scheduleId);
                 startActivity(intent);
             }
         });
@@ -103,8 +106,7 @@ public class MainPageActivity extends AppCompatActivity {
 
                     // HTTP 요청 설정
                     con.setRequestMethod("GET");
-                    con.setRequestProperty("Content-Type", "application/json");
-
+                    con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                     int responseCode = con.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         // 정상적인 응답일 때만 데이터를 읽어옴
@@ -124,7 +126,11 @@ public class MainPageActivity extends AppCompatActivity {
                             JsonObject scheduleObject = jsonArray.get(i).getAsJsonObject();
                             long scheduleId = scheduleObject.get("scheduleId").getAsLong();
                             String title = scheduleObject.get("title").getAsString();
-                            scheduleList.add(new Schedule(scheduleId, title).toString());
+                            Schedule schedule = new Schedule();
+                            schedule.setScheduleId(scheduleId);
+                            schedule.setTitle(title);
+                            scheduleListFromBackend.add(schedule);
+                            scheduleList.add(schedule.toString());
                         }
                         runOnUiThread(new Runnable() {
                             @Override

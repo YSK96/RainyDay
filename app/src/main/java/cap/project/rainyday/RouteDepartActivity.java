@@ -28,6 +28,21 @@ public class RouteDepartActivity extends AppCompatActivity {
     private TextView timeTextView;
 
     private TextView selectedView;
+
+    private long scheduleId;
+
+    private int departYear;
+    private int departMonth;
+    private int departDay;
+    private int departHour;
+    private int departMinute;
+
+    final String[] departName = new String[1];
+    final double[] departLat = new double[1];
+    final double[] departLng = new double[1];
+
+    final String[] departAddress = new String[1];
+
     private void showDatePickerDialog () {
         // 현재 날짜 가져오기
         Calendar calendar = Calendar.getInstance();
@@ -42,6 +57,9 @@ public class RouteDepartActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         // 선택한 날짜 TextView에 표시
                         dateTextView.setText("날짜 : "+year + "년 " + (month + 1) + "월 " + dayOfMonth + "일");
+                        departYear = year;
+                        departMonth = month;
+                        departDay = dayOfMonth;
                     }
                 }, year, month, dayOfMonth);
 
@@ -63,6 +81,8 @@ public class RouteDepartActivity extends AppCompatActivity {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         // 선택한 시간 TextView에 표시
                         timeTextView.setText("시간 : "+hourOfDay + "시 " + minute + "분");
+                        departHour = hourOfDay;
+                        departMinute = minute;
                     }
                 }, hour, minute, true); // 마지막 매개변수는 24시간 표시 여부
 
@@ -72,13 +92,11 @@ public class RouteDepartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_depart);
-        final String[] name = new String[1];
-        final double[] lat = new double[1];
-        final double[] lng = new double[1];
         dateTextView = findViewById(R.id.date_depart);
         timeTextView = findViewById(R.id.time_depart);
         selectedView = findViewById(R.id.selected_depart);
-
+        Intent intent = getIntent();
+        scheduleId = intent.getLongExtra("scheduleId", 0);
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), "AIzaSyBI_xKrXy81n7ELWopYZi15QMKJ0rQrL6Q");
         }
@@ -90,10 +108,11 @@ public class RouteDepartActivity extends AppCompatActivity {
             @Override
             public void onPlaceSelected(Place place) {
                 if (place.getLatLng() != null) {
-                    name[0] = place.getName();
-                    lat[0] = place.getLatLng().latitude;
-                    lng[0] = place.getLatLng().longitude;
-                    selectedView.setText("선택된 장소 : "+name[0]);
+                    departName[0] = place.getName();
+                    departLat[0] = place.getLatLng().latitude;
+                    departLng[0] = place.getLatLng().longitude;
+                    departAddress[0] = place.getAddress();
+                    selectedView.setText("선택된 장소 : "+departName[0]);
                 }
             }
 
@@ -108,6 +127,16 @@ public class RouteDepartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RouteDepartActivity.this, RouteDestActivity.class);
+                intent.putExtra("scheduleId", scheduleId);
+                intent.putExtra("departYear", departYear);
+                intent.putExtra("departMonth", departMonth);
+                intent.putExtra("departDay", departDay);
+                intent.putExtra("departHour", departHour);
+                intent.putExtra("departMinute", departMinute);
+                intent.putExtra("departName", departName[0]);
+                intent.putExtra("departLat", departLat[0]);
+                intent.putExtra("departLng", departLng[0]);
+                intent.putExtra("departAddress", departAddress[0]);
                 startActivity(intent);
             }
         });
