@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class RegisterActivity extends AppCompatActivity {
     private static class User {
@@ -80,7 +81,11 @@ public class RegisterActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             // JSON 형식으로 데이터 생성
-                            String json = String.format("{\"id\": \"%s\", \"password\": \"%s\", \"name\": \"%s\"}", id, password, name);
+
+                            String json = String.format("{\"id\": \"%s\", \"password\": \"%s\", \"name\": \"%s\"}",
+                                    id,
+                                    password,
+                                    name);
 
 
                             String url = "http://ec2-34-229-85-193.compute-1.amazonaws.com/user/create";
@@ -93,9 +98,9 @@ public class RegisterActivity extends AppCompatActivity {
                             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                             con.setDoOutput(true);
 
-                            // JSON 데이터 전송
                             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                            wr.writeBytes(json);
+                            byte[] jsonBytes = json.getBytes(StandardCharsets.UTF_8); // UTF-8로 인코딩된 바이트 배열 얻기
+                            wr.write(jsonBytes, 0, jsonBytes.length); // 바이트 배열을 전송
                             wr.flush();
                             wr.close();
 

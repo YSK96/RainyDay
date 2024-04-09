@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class ScheduleAddActivity extends AppCompatActivity {
     private long userId;
@@ -66,7 +67,8 @@ public class ScheduleAddActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // JSON 형식으로 데이터 생성
-                        String json = "{ \"title\" : \"" + title + "\"}";
+
+                        String json = String.format("{ \"title\" : \"%s\" }", title);
                         // HTTP 요청 보내기
                         try {
                             String url = "http://ec2-34-229-85-193.compute-1.amazonaws.com/schedule/create?userId="+userId;
@@ -81,7 +83,8 @@ public class ScheduleAddActivity extends AppCompatActivity {
 
                             // JSON 데이터 전송
                             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                            wr.writeBytes(json);
+                            byte[] jsonBytes = json.getBytes(StandardCharsets.UTF_8); // UTF-8로 인코딩된 바이트 배열 얻기
+                            wr.write(jsonBytes, 0, jsonBytes.length); // 바이트 배열을 전송
                             wr.flush();
                             wr.close();
 

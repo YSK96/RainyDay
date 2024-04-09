@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class LoginActivity extends AppCompatActivity {
     private static class User {
@@ -97,7 +98,8 @@ public class LoginActivity extends AppCompatActivity {
 
                             // JSON 데이터 전송
                             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                            wr.writeBytes(json);
+                            byte[] jsonBytes = json.getBytes(StandardCharsets.UTF_8); // UTF-8로 인코딩된 바이트 배열 얻기
+                            wr.write(jsonBytes, 0, jsonBytes.length); // 바이트 배열을 전송
                             wr.flush();
                             wr.close();
 

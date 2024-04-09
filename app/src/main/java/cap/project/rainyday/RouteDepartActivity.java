@@ -2,8 +2,10 @@ package cap.project.rainyday;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.common.api.Status;
@@ -37,11 +40,16 @@ public class RouteDepartActivity extends AppCompatActivity {
     private int departHour;
     private int departMinute;
 
-    final String[] departName = new String[1];
-    final double[] departLat = new double[1];
-    final double[] departLng = new double[1];
+    String departName;
+    double departLat;
+    double departLng;
 
-    final String[] departAddress = new String[1];
+    String departAddress;
+
+    Boolean selectedPlace = false;
+    Boolean selectedDate= false;
+
+    Boolean selectedTime= false;
 
     private void showDatePickerDialog () {
         // 현재 날짜 가져오기
@@ -60,6 +68,7 @@ public class RouteDepartActivity extends AppCompatActivity {
                         departYear = year;
                         departMonth = month;
                         departDay = dayOfMonth;
+                        selectedDate = true;
                     }
                 }, year, month, dayOfMonth);
 
@@ -83,11 +92,26 @@ public class RouteDepartActivity extends AppCompatActivity {
                         timeTextView.setText("시간 : "+hourOfDay + "시 " + minute + "분");
                         departHour = hourOfDay;
                         departMinute = minute;
+                        selectedTime = true;
                     }
                 }, hour, minute, true); // 마지막 매개변수는 24시간 표시 여부
 
         // TimePickerDialog 표시
         timePickerDialog.show();
+    }
+
+    private void showLoginFailedDialog(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message)
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 확인 버튼을 클릭하면 다이얼로그를 닫음
+                        dialog.dismiss();
+                    }
+                })
+                .create()
+                .show();
     }
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,11 +132,12 @@ public class RouteDepartActivity extends AppCompatActivity {
             @Override
             public void onPlaceSelected(Place place) {
                 if (place.getLatLng() != null) {
-                    departName[0] = place.getName();
-                    departLat[0] = place.getLatLng().latitude;
-                    departLng[0] = place.getLatLng().longitude;
-                    departAddress[0] = place.getAddress();
-                    selectedView.setText("선택된 장소 : "+departName[0]);
+                    departName = place.getName();
+                    departLat = place.getLatLng().latitude;
+                    departLng = place.getLatLng().longitude;
+                    departAddress = place.getAddress();
+                    selectedView.setText("선택된 장소 : "+departName);
+                    selectedPlace = true;
                 }
             }
 
@@ -126,6 +151,11 @@ public class RouteDepartActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (selectedDate == false || selectedPlace == false || selectedTime == false) {
+                    showLoginFailedDialog("입력되지 않은 칸이 존재합니다.");
+                    return;
+                }
                 Intent intent = new Intent(RouteDepartActivity.this, RouteDestActivity.class);
                 intent.putExtra("scheduleId", scheduleId);
                 intent.putExtra("departYear", departYear);
@@ -133,10 +163,10 @@ public class RouteDepartActivity extends AppCompatActivity {
                 intent.putExtra("departDay", departDay);
                 intent.putExtra("departHour", departHour);
                 intent.putExtra("departMinute", departMinute);
-                intent.putExtra("departName", departName[0]);
-                intent.putExtra("departLat", departLat[0]);
-                intent.putExtra("departLng", departLng[0]);
-                intent.putExtra("departAddress", departAddress[0]);
+                intent.putExtra("departName", departName);
+                intent.putExtra("departLat", departLat);
+                intent.putExtra("departLng", departLng);
+                intent.putExtra("departAddress", departAddress);
                 startActivity(intent);
             }
         });

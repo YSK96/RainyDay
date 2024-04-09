@@ -199,7 +199,7 @@ public class Route {
 
         // 도착지 정보 문자열 생성
         String destInfo = "도착지: " + destName + "\n" +
-                "도착 시간: " + destDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분")) + "\n" +
+                "(예상)도착 시간: " + destDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분")) + "\n" +
                 "도착지 위도: " + destLat + "\n" +
                 "도착지 경도: " + destLng + "\n" +
                 "도착지 주소: " + destAddress + "\n" +
