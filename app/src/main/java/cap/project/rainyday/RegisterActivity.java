@@ -15,7 +15,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         // 회원가입 버튼
-        Button button_register = findViewById(R.id.button_login);
+        Button button_register = findViewById(R.id.button_register);
         button_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -24,7 +24,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         // 이미 회원이시라구요? --> 로그인 화면으로
-        Button button_login = findViewById(R.id.button_login);
+        Button button_login = findViewById(R.id.button_already_member);
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
