@@ -2,92 +2,69 @@ package cap.project.rainyday;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
+import cap.project.rainyday.tool.LoginSharedPreferences;
 
 public class MainActivity extends AppCompatActivity {
-
-    // 하단 바 구성요소
-     TextView weatherTextView, homeTextView, myInfoTextView;
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) { // 툴바 관련
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_add) {
-            // 툴바에서 + 터치시 이동
-            Intent intent = new Intent(MainActivity.this, ScheduleAddActivity.class);
-            startActivity(intent);
-
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 툴바 설정
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        // 하단 바 설정
-        weatherTextView = findViewById(R.id.weatherTextView);
-        homeTextView = findViewById(R.id.homeTextView);
-        myInfoTextView = findViewById(R.id.myInfoTextView);
-
-        weatherTextView.setOnClickListener(new View.OnClickListener() {
+        Button temp_login = findViewById(R.id.temp_login);
+        temp_login.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                loadFragment(new WeatherFragment());
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
-        homeTextView.setOnClickListener(new View.OnClickListener() {
+        Button temp_register = findViewById(R.id.temp_register);
+        temp_register.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                loadFragment(new HomeFragment());
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
-        myInfoTextView.setOnClickListener(new View.OnClickListener() {
+        Button enroll = findViewById(R.id.temp_enroll);
+        enroll.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                loadFragment(new MyInfoFragment());
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RouteDepartActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
-        // 앱 시작 시 기본적으로 표시될 프래그먼트 설정
-        if (savedInstanceState == null) {
-            loadFragment(new HomeFragment());
-        }
-    }
+        Button main = findViewById(R.id.temp_main);
+        main.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
-    // 프래그먼트 로드 메소드
-    private void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
+        Button logout = findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginSharedPreferences.saveUserId(getApplicationContext(), 0);
+                Toast.makeText(MainActivity.this,"로그아웃됨",Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 }

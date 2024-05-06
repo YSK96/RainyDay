@@ -24,12 +24,12 @@
         android:id="@+id/login_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign in to Rainy Day"
+        android:layout_marginTop="16dp"
+        android:text="로그인"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintTop_toBottomOf="@id/login_icon"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_icon" />
 
     <!-- 로그인 정보 입력 및 버튼을 감싸는 CardView -->
     <androidx.cardview.widget.CardView
@@ -132,7 +132,7 @@
 
             <!-- 회원가입 버튼 -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_register"
+                android:id="@+id/button_goto_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

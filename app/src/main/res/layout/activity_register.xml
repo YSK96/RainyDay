@@ -24,12 +24,12 @@
         android:id="@+id/register_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register for Rainy Day"
+        android:layout_marginTop="16dp"
+        android:text="회원가입"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintTop_toBottomOf="@id/register_icon"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/register_icon" />
 
     <!-- 정보 입력과 가입하기 버튼을 감싸는 CardView -->
     <androidx.cardview.widget.CardView
