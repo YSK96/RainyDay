@@ -94,7 +94,6 @@ public class MainPageActivity extends AppCompatActivity {
             }
         });
 
-        //=================================================================================//
         // 메뉴 버튼 클릭 시 동작 설정
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +129,6 @@ public class MainPageActivity extends AppCompatActivity {
 
             }
         });
-        //=================================================================================//
 
         // 각 메뉴 아이템 클릭 시 동작 설정
         setupMenuItems();
