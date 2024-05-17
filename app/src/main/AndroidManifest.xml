@@ -16,11 +16,17 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".NavigationActivity"
+            android:name=".ForExampleActivity"
             android:exported="false" />
         <activity
             android:name=".MainPageActivity"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
@@ -31,26 +37,14 @@
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".RouteDepartActivity"
+            android:name=".RouteActivity"
             android:exported="false" />
         <activity
             android:name=".ScheduleAddActivity"
             android:exported="false" />
         <activity
-            android:name=".RouteActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RouteDestActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

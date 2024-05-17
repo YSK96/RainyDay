@@ -37,5 +37,11 @@
         android:layout_height="wrap_content"
         android:text="로그아웃" />
 
+    <Button
+        android:id="@+id/samplebutton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="샘플" />
+
 
 </LinearLayout>

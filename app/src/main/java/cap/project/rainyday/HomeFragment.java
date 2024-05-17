@@ -75,7 +75,6 @@ public class HomeFragment extends Fragment implements ItemClickListener {
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton("아니오", null)
                 .create()
                 .show();
     }
@@ -94,6 +93,13 @@ public class HomeFragment extends Fragment implements ItemClickListener {
         addtextView = view.findViewById(R.id.noListText);
         addbutton.setVisibility(View.GONE);
         addtextView.setVisibility(View.GONE);
+        addbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ScheduleAddActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
@@ -150,41 +156,6 @@ public class HomeFragment extends Fragment implements ItemClickListener {
 
     public void updateList(Boolean fetchBackend) {
         int sort = SortSharedPreferences.getSort(getActivity().getApplicationContext());
-
-        if(fetchBackend == false){
-            if(sort == 0){ // "최근 등록 순"
-                Collections.reverse(scheItems);
-            }
-            else if(sort == 1){ // "가까운 일정 순"
-                Collections.sort(scheItems, new Schedule.ScheduleComparator());
-            }
-            if(scheItems.size() != 0) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        addbutton.setVisibility(View.GONE);
-                        addtextView.setVisibility(View.GONE);
-                        adapter.setItems(scheItems);
-                        adapter.notifyDataSetChanged();
-
-                    }
-                });
-            }
-            else {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        scheItems.clear();
-                        adapter.setItems(scheItems);
-                        adapter.notifyDataSetChanged();
-                        addbutton.setVisibility(View.VISIBLE);
-                        addtextView.setVisibility(View.VISIBLE);
-
-                    }
-                });
-            }
-            return;
-        }
 
         if (scheItems == null) {
             scheItems = new ArrayList<>();
@@ -272,11 +243,7 @@ public class HomeFragment extends Fragment implements ItemClickListener {
 
     public void restoreAndUpdateList() {
         int sort = SortSharedPreferences.getSort(getActivity().getApplicationContext());
-        if (scheItems == null) {
-            scheItems = new ArrayList<>();
-        } else {
-            scheItems.clear(); // 기존 데이터를 지웁니다.
-        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -291,6 +258,11 @@ public class HomeFragment extends Fragment implements ItemClickListener {
                     con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                     int responseCode = con.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
+                        if (scheItems == null) {
+                            scheItems = new ArrayList<>();
+                        } else {
+                            scheItems.clear(); // 기존 데이터를 지웁니다.
+                        }
                         // 정상적인 응답일 때만 데이터를 읽어옴
                         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                         String inputLine;
@@ -330,16 +302,14 @@ public class HomeFragment extends Fragment implements ItemClickListener {
 
                     }
                     else if(responseCode == HttpURLConnection.HTTP_NO_CONTENT){
+
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                addbutton.setVisibility(View.GONE);
-                                addtextView.setVisibility(View.GONE);
-                                adapter.setItems(scheItems);
-                                adapter.notifyDataSetChanged();
+                                showDialog("최근에 삭제된 일정이 없습니다.");
                             }
                         });
-                        showDialog("최근에 삭제된 일정이 없습니다.");
+
                     }
                     else {
                         // 응답이 200이 아닌 경우 에러 처리

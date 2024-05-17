@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         enroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RouteDepartActivity.class);
+                Intent intent = new Intent(MainActivity.this, RouteActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         main.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
+                Intent intent = new Intent(MainActivity.this, ScheduleAddActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -63,8 +63,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LoginSharedPreferences.saveUserId(getApplicationContext(), 0);
                 Toast.makeText(MainActivity.this,"로그아웃됨",Toast.LENGTH_LONG).show();
+
             }
         });
+
+
 
     }
 }

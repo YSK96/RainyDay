@@ -2,76 +2,122 @@ package cap.project.rainyday;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.json.JSONException;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
+import cap.project.rainyday.model.Location;
 import cap.project.rainyday.model.Route;
 
-import cap.project.rainyday.weather.Location;
+import cap.project.rainyday.model.Schedule;
+import cap.project.rainyday.model.Weather;
 import cap.project.rainyday.weather.MidTermWeather;
 import cap.project.rainyday.weather.ShortTermForeacast;
 import cap.project.rainyday.weather.ShortTermWeather;
 import cap.project.rainyday.weather.midTermForecast;
 
-public class RouteActivity extends AppCompatActivity {
+public class RouteActivity extends AppCompatActivity implements WeatherClickListener {
 
     private long scheduleId;
-    TextView text;
+    ImageButton back;
+    Button backbutton;
+
+    private RecyclerView recyclerView;
+    private static ScheWeatherAdapter adapter;
+    private ProgressBar loadingProgressBar;
+    private List<Weather> weatherItems;
+
+    private List<Location> FromBackend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_route);
+        setContentView(R.layout.activity_schedule_weather);
         Intent intent = getIntent();
         scheduleId = intent.getLongExtra("scheduleId", 0);
-        text = findViewById(R.id.tt);
-        text.setText(String.valueOf(scheduleId));
+        back = findViewById(R.id.backhome);
+        backbutton = findViewById(R.id.backbutton);
+        recyclerView = findViewById(R.id.weatherList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ScheWeatherAdapter(new ArrayList<>(), this);
+        recyclerView.setAdapter(adapter);
+        loadingProgressBar = findViewById(R.id.loadingProgressBar);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        text.setText(String.valueOf(scheduleId));
+        LoadData();
+
     }
 
-    /*
-    protected void onResume() {
-        super.onResume();
-        routeList = new ArrayList<>();
-        routeListFromBackend = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, routeList);
-        listViewRoute = findViewById(R.id.routeListView);
-        listViewRoute.setAdapter(adapter);
-
+    private void LoadData() {
+        if (FromBackend == null) {
+            FromBackend = new ArrayList<>();
+        } else {
+            FromBackend.clear(); // 기존 데이터를 지웁니다.
+        }
+        if (weatherItems == null) {
+            weatherItems = new ArrayList<>();
+        } else {
+            weatherItems.clear(); // 기존 데이터를 지웁니다.
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String url = "http://ec2-54-144-194-174.compute-1.amazonaws.com/route/load?scheduleId=" + scheduleId;
-                    //String url = "http://192.168.219.153:80/schedule/load?userId="+userId;;
+                    String url = "http://ec2-54-144-194-174.compute-1.amazonaws.com/schedule/" + scheduleId;
                     URL obj = new URL(url);
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -91,160 +137,150 @@ public class RouteActivity extends AppCompatActivity {
                             response.append(inputLine);
                         }
                         in.close();
-
                         // JSON 데이터 파싱 및 리스트뷰에 추가
                         JsonArray jsonArray = JsonParser.parseString(response.toString()).getAsJsonArray();
                         for (int i = 0; i < jsonArray.size(); i++) {
                             JsonObject scheduleObject = jsonArray.get(i).getAsJsonObject();
-
-                            Route route = new Route();
-                            long routeId = scheduleObject.get("routeId").getAsLong();
-                            int departYear = scheduleObject.get("departYear").getAsInt();
-                            int departMonth = scheduleObject.get("departMonth").getAsInt();
-                            int departDay = scheduleObject.get("departDay").getAsInt();
-                            int departHour = scheduleObject.get("departHour").getAsInt();
-                            int departMinute = scheduleObject.get("departMinute").getAsInt();
-                            String departName = scheduleObject.get("departName").getAsString();
-                            double departLat = scheduleObject.get("departLat").getAsDouble();
-                            double departLng = scheduleObject.get("departLng").getAsDouble();
-                            String departAddress = scheduleObject.get("departAddress").getAsString();
-                            int departNx = scheduleObject.get("departNx").getAsInt();
-                            int departNy = scheduleObject.get("departNy").getAsInt();
-                            String departRegioncode = scheduleObject.get("departRegioncode").getAsString();
-
-                            int destYear = scheduleObject.get("destYear").getAsInt();
-                            int destMonth = scheduleObject.get("destMonth").getAsInt();
-                            int destDay = scheduleObject.get("destDay").getAsInt();
-                            int destHour = scheduleObject.get("destHour").getAsInt();
-                            int destMinute = scheduleObject.get("destMinute").getAsInt();
-                            String destName = scheduleObject.get("destName").getAsString();
-                            double destLat = scheduleObject.get("destLat").getAsDouble();
-                            double destLng = scheduleObject.get("destLng").getAsDouble();
-                            String destAddress = scheduleObject.get("destAddress").getAsString();
-                            int destNx = scheduleObject.get("destNx").getAsInt();
-                            int destNy = scheduleObject.get("destNy").getAsInt();
-                            String destRegioncode = scheduleObject.get("destRegioncode").getAsString();
-
-                            route.setRouteId(routeId);
-                            route.setDepartYear(departYear);
-                            route.setDepartMonth(departMonth);
-                            route.setDepartDay(departDay);
-                            route.setDepartHour(departHour);
-                            route.setDepartMinute(departMinute);
-                            route.setDepartName(departName);
-                            route.setDepartLat(departLat);
-                            route.setDepartLng(departLng);
-                            route.setDepartAddress(departAddress);
-                            route.setDepartNx(departNx);
-                            route.setDepartNy(departNy);
-                            route.setDepartRegioncode(departRegioncode);
-                            route.setDestYear(destYear);
-                            route.setDestMonth(destMonth);
-                            route.setDestDay(destDay);
-                            route.setDestHour(destHour);
-                            route.setDestMinute(destMinute);
-                            route.setDestName(destName);
-                            route.setDestLat(destLat);
-                            route.setDestLng(destLng);
-                            route.setDestAddress(destAddress);
-                            route.setDestNx(destNx);
-                            route.setDestNy(destNy);
-                            route.setDestRegioncode(destRegioncode);
-                            routeListFromBackend.add(route);
-                            routeList.add("로딩 중");
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-
-                            String s[] = new String[2];
-                            s[0] = "";
-                            s[1] = "";
-                            for (int k = 0; k < 2; k++) {
+                            if (i == 0) {
+                                Location location = new Location();
+                                location.setName(scheduleObject.get("name").getAsString());
+                                location.setTime(scheduleObject.get("departTime").getAsString());
+                                location.setLat(scheduleObject.get("lat").getAsDouble());
+                                location.setLng(scheduleObject.get("lng").getAsDouble());
+                                location.setNx(scheduleObject.get("nx").getAsInt());
+                                location.setNy(scheduleObject.get("ny").getAsInt());
+                                location.setRegioncode(scheduleObject.get("regioncode").getAsString());
+                                FromBackend.add(location);
+                            } else if (i == jsonArray.size() - 1) {
+                                Location location = new Location();
+                                location.setName(scheduleObject.get("name").getAsString());
+                                location.setTime(scheduleObject.get("destTime").getAsString());
+                                location.setLat(scheduleObject.get("lat").getAsDouble());
+                                location.setLng(scheduleObject.get("lng").getAsDouble());
+                                location.setNx(scheduleObject.get("nx").getAsInt());
+                                location.setNy(scheduleObject.get("ny").getAsInt());
+                                location.setRegioncode(scheduleObject.get("regioncode").getAsString());
+                                FromBackend.add(location);
+                            } else {
 
 
-                                LocalDateTime now = LocalDateTime.now();
-                                LocalDateTime dateTime;
-                                Location location;
-                                if(k==0) {
-                                    dateTime = LocalDateTime.of(departYear, departMonth, departDay, departHour + 1, 0);
-                                    location = new Location(departNx,departNy,departRegioncode);
-                                }
-                                else{
-                                    dateTime = LocalDateTime.of(destYear, destMonth, destDay, destHour + 1, 0);
-                                    location = new Location(destNx,destNy,destRegioncode);
-                                }
-                                Duration duration = Duration.between(now, dateTime);
-                                long daysDifference = duration.toDays(); // Day 차이
-                                try {
-                                    if (dateTime.isAfter(now)) {
-                                        if (daysDifference >= 0 && daysDifference <= 3) {
-                                            ShortTermForeacast weather_f = new ShortTermForeacast(location);
-                                            ShortTermWeather weather_s[] = weather_f.getWeather();
-                                            //저는 for문으로 모두 출력했지만 첫번째 인덱스의 시간과 날짜를 보고 몇시간 후인지 전인지 보고 인덱스를 더하고 몇일 뒤인지에 따라 24만큼 인덱스를 더해서 빠르게 접근가능합니다
-                                            for (ShortTermWeather weather : weather_s) {
-                                                if(!weather.fcst.format(DateTimeFormatter.ofPattern("ddHHmm")).
-                                                        equals(dateTime.format(DateTimeFormatter.ofPattern("ddHHmm")))){
-                                                   continue;
-                                                }
-                                                s[k] += "날짜 : ";
-                                                s[k]  += weather.fcst.format(DateTimeFormatter.ofPattern("ddHHmm"));
-                                                s[k]  += "TMP 온도 : ";
-                                                s[k]  += weather.tmp;
-                                                s[k]  += ", POP 강수확률 : ";
-                                                s[k]  += weather.pop;
-                                                s[k]  += ", PCP 강수량 : ";
-                                                s[k]  += weather.pcp;
-                                                s[k]  += "\n";
-                                            }
-                                        } else if (daysDifference >= 4 && daysDifference <= 10) {
-                                            midTermForecast midTerm = new midTermForecast(LocalDateTime.now(), location);
-                                            //중기 예보의 경우 0600 1800에만 발표
-                                            // midTerm.getWeather_midTerm();
-                                            MidTermWeather weather_m[] = midTerm.getWeather_midTerm_get_all();
-                                            //0 인덱스부터 3일후 7인덱스가 10일 후 입니다
-
-                                            for (int j = 0; j < 8; ++j) {
-                                                if(daysDifference == (j+3)) {
-                                                    if(dateTime.getHour() <=12) {
-                                                        s[k] += (j + 3) + "일 후 오전 강수확률 :" + weather_m[j].rnStAm + "\n";
-                                                        s[k] += (j + 3) + "일 후 오전 날씨 :" + weather_m[j].wfAm + "\n";
-                                                    }
-                                                    else {
-                                                        s[k] += (j + 3) + "일 후 오후 강수확률 :" + weather_m[j].rnStPm + "\n";
-                                                        s[k] += (j + 3) + "일 후 오후 날씨 :" + weather_m[j].wfPm;
-                                                    }
-                                                }
-                                            }
-                                        } else {
-                                            s[k]  = "10일 이후 날씨는 제공되지 않습니다.";
-                                        }
-                                    } else {
-                                        s[k]  = "현재 시간보다 이전입니다.";
-                                    }
-                                } catch (Exception e) {
-                                    Log.d("abc", e.toString());
-                                    s[k]  = "해당 장소를 조회할 수 없습니다.";
-                                }
+                                Location locationDest = new Location();
+                                locationDest.setName(scheduleObject.get("name").getAsString());
+                                locationDest.setTime(scheduleObject.get("destTime").getAsString());
+                                locationDest.setLat(scheduleObject.get("lat").getAsDouble());
+                                locationDest.setLng(scheduleObject.get("lng").getAsDouble());
+                                locationDest.setNx(scheduleObject.get("nx").getAsInt());
+                                locationDest.setNy(scheduleObject.get("ny").getAsInt());
+                                locationDest.setRegioncode(scheduleObject.get("regioncode").getAsString());
+                                FromBackend.add(locationDest);
+                                
+                                Location locationDepart = new Location();
+                                locationDepart.setName(scheduleObject.get("name").getAsString());
+                                locationDepart.setTime(scheduleObject.get("departTime").getAsString());
+                                locationDepart.setLat(scheduleObject.get("lat").getAsDouble());
+                                locationDepart.setLng(scheduleObject.get("lng").getAsDouble());
+                                locationDepart.setNx(scheduleObject.get("nx").getAsInt());
+                                locationDepart.setNy(scheduleObject.get("ny").getAsInt());
+                                locationDepart.setRegioncode(scheduleObject.get("regioncode").getAsString());
+                                FromBackend.add(locationDepart);
 
                             }
-                            routeList.set(i , "---------\n"+route.toStringDepart() + s[0]+
-                                    "\n\n"+route.toStringDest() + s[1]+"\n---------");
+
+
                         }
+                        List<Thread> threadList = new ArrayList<>();
+                        for (int i = 0; i < FromBackend.size(); i++) {
+                            final int index = i;
+                            Location location = FromBackend.get(i);
+                            Thread thread = new Thread(() -> {
+                                cap.project.rainyday.weather.Location weatherLocation = new cap.project.rainyday.weather.Location(
+                                        location.getNx(), location.getNy(), location.getRegioncode()
+                                );
+                                LocalDateTime now = LocalDateTime.now();
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                                LocalDateTime dateTime = LocalDateTime.parse(location.getTime(), formatter);
+                                Duration duration = Duration.between(now, dateTime);
+                                long daysDifference = duration.toDays(); // Day 차이
+                                Weather weatherItem = new Weather();
+                                weatherItem.setIndex(index);
+                                weatherItem.setLocation(location.getName());
+                                weatherItem.setTime(dateTime.format(DateTimeFormatter.ofPattern("ddHHmm")).substring(0, 2) +
+                                        "일 " + dateTime.format(DateTimeFormatter.ofPattern("ddHHmm")).substring(2, 4) +
+                                        "시 " + dateTime.format(DateTimeFormatter.ofPattern("ddHHmm")).substring(4, 6) +
+                                        "분");
+
+                                if (dateTime.isAfter(now)) {
+                                    if (daysDifference >= 0 && daysDifference <= 2) {
+                                        ShortTermForeacast weather_f = new ShortTermForeacast(weatherLocation);
+                                        ShortTermWeather weather_s[] = weather_f.getWeather();
+                                        //저는 for문으로 모두 출력했지만 첫번째 인덱스의 시간과 날짜를 보고 몇시간 후인지 전인지 보고 인덱스를 더하고 몇일 뒤인지에 따라 24만큼 인덱스를 더해서 빠르게 접근가능합니다
+                                        for (ShortTermWeather weather : weather_s) {
+                                            if (!weather.fcst.format(DateTimeFormatter.ofPattern("ddHH")).
+                                                    equals(dateTime.format(DateTimeFormatter.ofPattern("ddHH")))) {
+                                                continue;
+                                            }
+
+                                            weatherItem.setTemperature(weather.tmp + "ºC");
+                                            weatherItem.setRainyPercent(weather.pop + "%");
+                                            weatherItem.setRainyAmount(weather.pcp);
+                                            weatherItem.setWeatherInfo(weather.wCode);
+                                            weatherItem.setType(0);
+                                            weatherItems.add(weatherItem);
+                                            break;
+                                        }
+                                    } else if (daysDifference >= 3 && daysDifference <= 10) {
+                                        midTermForecast midTerm = new midTermForecast(weatherLocation);
+                                        //중기 예보의 경우 0600 1800에만 발표
+                                        // midTerm.getWeather_midTerm();
+                                        MidTermWeather weather_m[] = midTerm.getWeather_midTerm_get_all();
+                                        //0 인덱스부터 3일후 7인덱스가 10일 후 입니다
+
+                                        for (int j = 0; j < 8; ++j) {
+                                            if (daysDifference == (j + 3)) {
+                                                weatherItem.setRainyPercent(weather_m[j].rnStAm + "%");
+                                                weatherItem.setWeatherInfo(weather_m[j].wfAm);
+                                                weatherItem.setType(1);
+                                                weatherItems.add(weatherItem);
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        weatherItem.setType(2); //10일 이후
+                                        weatherItems.add(weatherItem);
+                                    }
+                                } else {
+                                    weatherItem.setType(3); //현재보다 이전
+                                    weatherItems.add(weatherItem);
+                                }
+                            });
+                            threadList.add(thread);
+                            thread.start();
+                        }
+                        for (Thread thread : threadList) {
+                            try {
+                                thread.join(); // 다음 스레드가 실행되기 전에 현재 스레드가 종료될 때까지 기다립니다.
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Collections.sort(weatherItems, Comparator.comparingInt(Weather::getIndex));
+                                adapter.setItems(weatherItems);
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
                     }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyDataSetChanged();
-                        }
-                    });
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.d("eeee", e.toString());
                 }
             }
         }).start();
-    }*/
+    }
+
+    @Override
+    public void onItemClick(Weather item) {
+
+    }
 }
