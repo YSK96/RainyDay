@@ -3,7 +3,6 @@ package cap.project.rainyday;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import cap.project.rainyday.model.Stopover;
 import cap.project.rainyday.model.Weather;
 import cap.project.rainyday.weather.getImageNum;
 
@@ -64,10 +62,10 @@ public class ScheWeatherAdapter extends RecyclerView.Adapter<ScheWeatherAdapter.
             super(itemView);
             location_name = itemView.findViewById(R.id.location_name);
             location_time = itemView.findViewById(R.id.location_time);
-            location_temperature = itemView.findViewById(R.id.location_temperature);
+            location_temperature = itemView.findViewById(R.id.bell_sche_title);
             rain_amount = itemView.findViewById(R.id.rain_amount);
-            rain_percent = itemView.findViewById(R.id.rain_percent);
-            weather_info = itemView.findViewById(R.id.weather_info);
+            rain_percent = itemView.findViewById(R.id.bell_explain);
+            weather_info = itemView.findViewById(R.id.bell_time);
             weather_icon = itemView.findViewById(R.id.weather_icon);
 
         }

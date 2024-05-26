@@ -18,12 +18,12 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/rain_percent"
+            app:layout_constraintEnd_toStartOf="@+id/bell_explain"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/location_temperature"
+            android:id="@+id/bell_sche_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="온도"
@@ -44,7 +44,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/rain_percent"
+            android:id="@+id/bell_explain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
@@ -81,7 +81,7 @@
                 app:srcCompat="@drawable/rainyday_icon" />
 
             <TextView
-                android:id="@+id/weather_info"
+                android:id="@+id/bell_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

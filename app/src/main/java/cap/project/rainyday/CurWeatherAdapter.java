@@ -51,11 +51,11 @@ public class CurWeatherAdapter extends RecyclerView.Adapter<CurWeatherAdapter.Vi
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             locationTime = itemView.findViewById(R.id.location_time);
-            locationTemperature = itemView.findViewById(R.id.location_temperature);
+            locationTemperature = itemView.findViewById(R.id.bell_sche_title);
             rainAmount = itemView.findViewById(R.id.rain_amount);
-            rainPercent = itemView.findViewById(R.id.rain_percent);
+            rainPercent = itemView.findViewById(R.id.bell_explain);
             weatherIcon = itemView.findViewById(R.id.weather_icon);
-            weatherInfo = itemView.findViewById(R.id.weather_info);
+            weatherInfo = itemView.findViewById(R.id.bell_time);
         }
     }
 }
